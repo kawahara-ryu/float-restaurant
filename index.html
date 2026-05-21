@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>体験型：浮動小数点レストラン</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- タイトル画面 -->
+        <div id="screen-title" class="screen active">
+            <div class="plate-border">
+                <img id="title-img" src="./float_restaurant.png" alt="浮動小数点レストラン">
+            </div>
+            <h1 class="restaurant-title">FLOATING POINT</h1>
+            <h2>浮動小数点レストラン</h2>
+            <p class="subtitle">小数点が浮いてる高級レストランへようこそ</p>
+            <button class="r-btn start-btn" onclick="startGame()">🍽️ ディナーを始める</button>
+        </div>
+
+        <!-- STAGE 1: 2進小数を体感 -->
+        <div id="screen-stage1" class="screen">
+            <h2>🍽️ 前菜: 2進小数を味わう</h2>
+            <p class="stage-desc">スイッチをON/OFFして、2進小数と10進小数の関係を体感しよう！</p>
+            <div class="bit-toggle-area">
+                <div class="bit-col">
+                    <div class="bit-weight">1/2<br>(0.5)</div>
+                    <button class="bit-switch" id="b1" onclick="toggleBit('b1')">0</button>
+                </div>
+                <div class="bit-col">
+                    <div class="bit-weight">1/4<br>(0.25)</div>
+                    <button class="bit-switch" id="b2" onclick="toggleBit('b2')">0</button>
+                </div>
+                <div class="bit-col">
+                    <div class="bit-weight">1/8<br>(0.125)</div>
+                    <button class="bit-switch" id="b3" onclick="toggleBit('b3')">0</button>
+                </div>
+                <div class="bit-col">
+                    <div class="bit-weight">1/16<br>(0.0625)</div>
+                    <button class="bit-switch" id="b4" onclick="toggleBit('b4')">0</button>
+                </div>
+            </div>
+            <div class="result-display">
+                <div class="result-row">
+                    <span class="result-label">2進小数:</span>
+                    <span class="result-value" id="binary-result">0.0000</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">10進小数:</span>
+                    <span class="result-value" id="decimal-result">0</span>
+                </div>
+            </div>
+            <div class="mission-box">
+                <p class="mission-label">🎯 ミッション: お客様の注文</p>
+                <p class="mission-target" id="mission1-target"></p>
+                <p class="mission-hint" id="mission1-hint"></p>
+            </div>
+            <button class="r-btn" id="stage1-check" onclick="checkStage1()">🍽️ この値で提供する</button>
+        </div>
+
+        <!-- STAGE 2: 正規化を体感 -->
+        <div id="screen-stage2" class="screen">
+            <h2>🍽️ メイン: 正規化の盛り付け</h2>
+            <p class="stage-desc">小数点をスライドさせて「1.xxxx × 2<sup>n</sup>」の形に正規化しよう！</p>
+            <div class="normalize-area">
+                <div class="binary-display" id="norm-display">
+                    <span class="norm-digit" id="nd0">1</span>
+                    <span class="norm-digit" id="nd1">0</span>
+                    <span class="norm-point" id="norm-point">.</span>
+                    <span class="norm-digit" id="nd2">1</span>
+                    <span class="norm-digit" id="nd3">1</span>
+                </div>
+                <div class="slider-row">
+                    <label>小数点の位置:</label>
+                    <input type="range" id="point-slider" min="0" max="4" value="2" oninput="movePoint()">
+                </div>
+                <div class="result-row">
+                    <span class="result-label">現在の形:</span>
+                    <span class="result-value" id="norm-result"></span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">指数 (n):</span>
+                    <span class="result-value" id="norm-exp"></span>
+                </div>
+            </div>
+            <div class="mission-box">
+                <p class="mission-label">🎯 ミッション</p>
+                <p class="mission-target" id="mission2-target"></p>
+            </div>
+            <button class="r-btn" id="stage2-check" onclick="checkStage2()">🍽️ この盛り付けで提出</button>
+        </div>
+
+        <!-- STAGE 3: IEEE 754を組み立て -->
+        <div id="screen-stage3" class="screen">
+            <h2>🍽️ デザート: 32ビットの芸術</h2>
+            <p class="stage-desc">符号部・指数部・仮数部の3つの皿に正しく盛り付けろ！</p>
+            <div class="ieee-area">
+                <div class="ieee-plate sign-plate">
+                    <div class="plate-label">符号部 (1bit)</div>
+                    <button class="ieee-toggle" id="sign-toggle" onclick="toggleSign()">0 (正)</button>
+                </div>
+                <div class="ieee-plate exp-plate">
+                    <div class="plate-label">指数部 (バイアス127)</div>
+                    <div class="exp-controls">
+                        <label>実際の指数:</label>
+                        <input type="range" id="exp-slider" min="-5" max="5" value="0" oninput="updateIEEE()">
+                        <span id="exp-actual">0</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">+127 =</span>
+                        <span class="result-value" id="exp-biased">127</span>
+                    </div>
+                </div>
+                <div class="ieee-plate mantissa-plate">
+                    <div class="plate-label">仮数部 (ケチ表現)</div>
+                    <p class="kech-explain">先頭の「1.」は省略される！</p>
+                    <div class="mantissa-bits">
+                        <button class="m-bit" id="m0" onclick="toggleMBit('m0')">0</button>
+                        <button class="m-bit" id="m1" onclick="toggleMBit('m1')">0</button>
+                        <button class="m-bit" id="m2" onclick="toggleMBit('m2')">0</button>
+                        <button class="m-bit" id="m3" onclick="toggleMBit('m3')">0</button>
+                    </div>
+                </div>
+            </div>
+            <div class="ieee-result-box">
+                <div class="result-row">
+                    <span class="result-label">組み立てた値:</span>
+                    <span class="result-value" id="ieee-decimal">1.0</span>
+                </div>
+            </div>
+            <div class="mission-box">
+                <p class="mission-label">🎯 ミッション</p>
+                <p class="mission-target" id="mission3-target"></p>
+            </div>
+            <button class="r-btn" onclick="checkStage3()">🍽️ この料理を提供する</button>
+        </div>
+
+        <!-- ゲームオーバー -->
+        <div id="screen-gameover" class="screen">
+            <h1 class="gameover-title">CLOSED</h1>
+            <p class="gameover-subtitle" id="gameover-reason">お客様が帰ってしまった…</p>
+            <img src="./float_restaurant.png" alt="閉店" style="width:100px; filter: grayscale(100%) sepia(30%); margin-bottom: 20px; border-radius: 50%;">
+            <button class="r-btn" onclick="startGame()">↻ 再開店する</button>
+        </div>
+
+        <!-- クリア画面 -->
+        <div id="screen-clear" class="screen">
+            <img id="clear-img" src="./float_victory.png" alt="完了">
+            <h1 class="clear-title">FULL COURSE COMPLETE!</h1>
+            <p class="clear-subtitle">浮動小数点数のフルコースを完璧に提供した！</p>
+            <div class="summary-box">
+                <h3>📝 今日の学び</h3>
+                <ul>
+                    <li>2進小数は「1/2, 1/4, 1/8...」の位で表現する</li>
+                    <li>正規化は「1.xxxx × 2<sup>n</sup>」の形にすること</li>
+                    <li>IEEE 754 = 符号(1) + 指数(8, バイアス127) + 仮数(23, ケチ表現)</li>
+                </ul>
+            </div>
+            <div class="password-box">
+                <p>🗝️ Google Classroomの解答に以下の「あいことば」を入力してください。</p>
+                <p class="password-text">小数点が浮いてるのに料理は地に足がついてた</p>
+            </div>
+            <button class="r-btn" onclick="location.reload()">もう一度ディナーを楽しむ</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

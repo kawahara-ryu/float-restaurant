@@ -1,0 +1,104 @@
+:root {
+    --bg-color: #1a0a2e;
+    --bg-panel: #2d1b4e;
+    --text-color: #f5f0ff;
+    --text-dim: #b8a9d4;
+    --accent-main: #e6d5ff;
+    --accent-light: #ffd700;
+    --success-color: #81c784;
+    --danger-color: #e57373;
+    --font-pixel: 'DotGothic16', sans-serif;
+    --border-r: 4px solid #6a3d9a;
+    --shadow-r: 0 4px 0 #0d0520;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: var(--font-pixel); background-color: var(--bg-color); color: var(--text-color);
+    user-select: none; -webkit-user-select: none; overflow-x: hidden;
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(106,61,154,0.15) 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 50%, rgba(255,215,0,0.05) 0%, transparent 50%);
+}
+#game-container { position: relative; width: 100vw; min-height: 100vh; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; }
+.screen { position: absolute; top: 0; left: 0; width: 100%; min-height: 100%; display: none; flex-direction: column; z-index: 10; padding: 20px; overflow-y: auto; }
+.screen.active { display: flex; }
+#screen-title { justify-content: center; align-items: center; text-align: center; min-height: 100vh; }
+.plate-border { padding: 6px; background: linear-gradient(135deg, #ffd700, #b8860b); margin-bottom: 20px; border-radius: 50%; box-shadow: 0 0 30px rgba(255,215,0,0.3); }
+#title-img { width: 150px; height: 150px; object-fit: cover; display: block; border-radius: 50%; border: 4px solid var(--bg-panel); }
+.restaurant-title { font-size: 2.5rem; color: var(--accent-light); text-shadow: 3px 3px 0 #000, 0 0 20px rgba(255,215,0,0.3); margin-bottom: 5px; }
+#screen-title h2 { font-size: 1.4rem; color: var(--accent-main); margin-bottom: 10px; }
+.subtitle { color: var(--text-dim); margin-bottom: 30px; font-size: 1rem; }
+
+.r-btn { font-family: var(--font-pixel); font-size: 1.1rem; padding: 14px 28px; border: var(--border-r); border-radius: 8px; background: var(--bg-panel); color: var(--text-color); cursor: pointer; transition: transform 0.1s; box-shadow: var(--shadow-r); margin-top: 15px; width: 100%; }
+.r-btn:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; }
+.r-btn:hover { border-color: var(--accent-light); color: var(--accent-light); }
+
+h2 { font-size: 1.4rem; color: var(--accent-light); margin-bottom: 10px; text-shadow: 2px 2px 0 #000; }
+.stage-desc { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 15px; line-height: 1.5; }
+
+/* ビットトグル */
+.bit-toggle-area { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+.bit-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.bit-weight { font-size: 0.75rem; color: var(--accent-light); text-align: center; line-height: 1.3; }
+.bit-switch { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #555; background: #222; color: #888; font-family: var(--font-pixel); font-size: 1.5rem; cursor: pointer; transition: all 0.2s; }
+.bit-switch.on { background: var(--accent-light); color: #000; border-color: #fff; box-shadow: 0 0 15px rgba(255,215,0,0.5); }
+
+/* 結果表示 */
+.result-display { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 12px; margin-bottom: 15px; }
+.result-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.result-label { font-size: 0.9rem; color: var(--text-dim); }
+.result-value { font-size: 1.3rem; color: var(--accent-light); text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+
+/* ミッション */
+.mission-box { background: rgba(255,215,0,0.08); border: 2px solid var(--accent-light); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.mission-label { font-size: 0.85rem; color: var(--accent-light); margin-bottom: 5px; }
+.mission-target { font-size: 1.2rem; color: #fff; font-weight: bold; }
+.mission-hint { font-size: 0.8rem; color: var(--text-dim); margin-top: 5px; }
+
+/* 正規化 */
+.normalize-area { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+.binary-display { display: flex; justify-content: center; gap: 4px; font-size: 2rem; color: var(--accent-light); margin-bottom: 15px; padding: 10px; }
+.norm-digit { display: inline-block; width: 35px; text-align: center; }
+.norm-point { display: inline-block; width: 20px; text-align: center; color: #ff6b6b; font-weight: bold; animation: pointPulse 1s infinite; }
+@keyframes pointPulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+.slider-row { margin-bottom: 10px; }
+.slider-row label { font-size: 0.85rem; color: var(--text-dim); display: block; margin-bottom: 5px; }
+.slider-row input[type="range"] { width: 100%; accent-color: var(--accent-light); }
+
+/* IEEE 754 */
+.ieee-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+.ieee-plate { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 12px; }
+.sign-plate { border-color: #e57373; }
+.exp-plate { border-color: #64b5f6; }
+.mantissa-plate { border-color: #81c784; }
+.plate-label { font-size: 0.85rem; color: var(--accent-light); margin-bottom: 8px; }
+.ieee-toggle { font-family: var(--font-pixel); font-size: 1.1rem; padding: 10px 20px; border: 3px solid #e57373; border-radius: 8px; background: #222; color: #e57373; cursor: pointer; width: 100%; }
+.ieee-toggle.negative { background: #e57373; color: #000; }
+.exp-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.exp-controls label { font-size: 0.8rem; color: var(--text-dim); }
+.exp-controls input[type="range"] { flex: 1; accent-color: #64b5f6; min-width: 100px; }
+.exp-controls span { font-size: 1.2rem; color: #64b5f6; min-width: 30px; text-align: center; }
+.kech-explain { font-size: 0.75rem; color: var(--success-color); margin-bottom: 8px; }
+.mantissa-bits { display: flex; gap: 6px; }
+.m-bit { width: 40px; height: 40px; border-radius: 6px; border: 2px solid #555; background: #222; color: #888; font-family: var(--font-pixel); font-size: 1.2rem; cursor: pointer; transition: all 0.2s; }
+.m-bit.on { background: #81c784; color: #000; border-color: #fff; }
+.ieee-result-box { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+
+/* クリア */
+#screen-clear { align-items: center; text-align: center; justify-content: center; min-height: 100vh; }
+#clear-img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 2px solid var(--accent-light); margin-bottom: 15px; }
+.clear-title { font-size: 2.2rem; color: var(--success-color); text-shadow: 2px 2px 0 #000; margin-bottom: 10px; }
+.clear-subtitle { color: var(--text-color); margin-bottom: 20px; }
+.summary-box { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 15px; width: 100%; margin-bottom: 15px; text-align: left; }
+.summary-box h3 { color: var(--accent-light); margin-bottom: 10px; font-size: 1rem; }
+.summary-box ul { padding-left: 20px; font-size: 0.85rem; line-height: 1.6; color: var(--text-dim); }
+.summary-box li { margin-bottom: 5px; }
+.password-box { background: var(--bg-panel); border: var(--border-r); border-radius: 8px; padding: 15px; width: 100%; margin-bottom: 15px; }
+.password-box p:first-child { font-size: 0.9rem; margin-bottom: 8px; color: var(--accent-light); }
+.password-text { font-size: 1.1rem; color: var(--success-color); }
+
+/* ゲームオーバー */
+#screen-gameover { justify-content: center; align-items: center; text-align: center; min-height: 100vh; background: radial-gradient(circle, #2a0a0a, #000); }
+.gameover-title { font-size: 3.5rem; color: var(--danger-color); margin-bottom: 10px; text-shadow: 0 0 20px var(--danger-color); }
+.gameover-subtitle { color: #ccc; font-size: 1.1rem; margin-bottom: 30px; }
+
+@media (max-height: 700px) { .screen { padding: 15px; } h2 { font-size: 1.2rem; } .bit-switch { width: 45px; height: 45px; font-size: 1.2rem; } }
