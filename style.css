@@ -102,3 +102,5 @@ h2 { font-size: 1.4rem; color: var(--accent-light); margin-bottom: 10px; text-sh
 .gameover-subtitle { color: #ccc; font-size: 1.1rem; margin-bottom: 30px; }
 
 @media (max-height: 700px) { .screen { padding: 15px; } h2 { font-size: 1.2rem; } .bit-switch { width: 45px; height: 45px; font-size: 1.2rem; } }
+
+.keyword-text, .password-text { user-select: text !important; -webkit-user-select: text !important; }
